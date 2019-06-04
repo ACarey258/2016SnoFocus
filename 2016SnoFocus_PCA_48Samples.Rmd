@@ -1,0 +1,87 @@
+---
+title: "2016 Snohomish Focus Study - PCA analysis"
+output: html_notebook
+---
+
+```{r}
+# First step, clear workspace to make sure every thing will work, rm means remove
+rm(list=ls(all=TRUE))
+
+# load required packages/libraries
+library(readxl)
+library(tidyverse)
+library(devtools)
+install_github("vqv/ggbiplot")
+library(ggbiplot)
+
+#set data path
+paths = list("C:\\data\\GitHub\\2016SnoFocus\\2016SnoFocus_DataForPCA.xlsx",
+             "C:\\data\\GitHub\\2016SnoFocus\\")
+
+#set outfile
+outfile = paths[[2]]
+
+#read in data
+SnoDat <- read_excel(paths[[1]],"2016SnoFocus_DataForPCA")
+```
+
+PCAs work best with numerical data, so exclude categorical data
+
+```{r}
+colnames(SnoDat)
+
+SnoDat.pca <- prcomp(SnoDat[,c(7:9)], center = TRUE, scale. = TRUE) #only include data columns
+
+summary(SnoDat.pca)
+```
+
+PC1 and PC2 combine explain 87% of the variance combine
+
+```{r}
+str(SnoDat.pca) #use this to examine PCA object
+```
+$center = center point
+$scale = scale
+sdev = standard deviation of each principal component
+$rotation = the relationship (correlation or anticorrelation, etc.) between the initial variables and the principal components
+$x = the values of each sample in terms of the principal components
+
+PLOTTING THE PCA
+
+Use the ggbiplot package (installed above) to make a biplot which includes both the position of each sample in terms of PC1 and PC2 and will show how the initial variables map onto this.
+
+The biplot allows you to visualize how the samples relate to one another in the PCA (which samples are similar and which are different) and will simultaneously reveal how each variable contributes to each principal component.
+```{r}
+ggbiplot(SnoDat.pca)
+```
+
+```{r}
+SnoDat <-select(SnoDat, 6:9)
+SnoDat$RegionOrigin <- as.factor(SnoDat$RegionOrigin)
+
+ggbiplot(SnoDat.pca, group = SnoDat$RegionOrigin)
+```
+
+Group by Region and Origin
+```{r}
+ggbiplot(SnoDat.pca, ellipse = TRUE, group = SnoDat$RegionOrigin)
+
+```
+
+Scale the samples
+```{r}
+ggbiplot(SnoDat.pca, ellipse = TRUE, obs.scale = 1, var.scale = 1, group = SnoDat$RegionOrigin)
+```
+
+Remove the arrows
+
+```{r}
+ggbiplot(SnoDat.pca, ellipse = TRUE, obs.scale = 1, var.scale = 1, var.axes = FALSE, group = SnoDat$RegionOrigin)
+```
+
+Use the ggplot functions to customize the ggbiplot
+```{r}
+ggbiplot(SnoDat.pca, ellipse = TRUE, obs.scale = 1, var.scale = 1, group = SnoDat$RegionOrigin) +
+  theme_bw()
+```
+
