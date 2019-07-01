@@ -1,0 +1,110 @@
+---
+title: "2016 Snohomish Focus study - stacked bar charts for Graphical Abstract"
+output: html_notebook
+---
+
+Stacked Bar Chars
+Proportions of PCBs, PBDEs, and DDTs by region and origin
+
+```{r}
+# First step, clear workspace to make sure every thing will work, rm means remove
+rm(list=ls(all=TRUE))
+
+# load required packages/libraries
+library(readxl)
+library(tidyverse)
+library(devtools)
+
+#set data path
+paths = list("C:\\data\\GitHub\\2016SnoFocus\\2016SnoFocus_DataForStackBars.xlsx",
+             "C:\\data\\GitHub\\2016SnoFocus\\")
+
+#set outfile
+outfile = paths[[2]]
+
+#read in data
+SnoProps <- read_excel(paths[[1]],"2016SnoFocus_DataForStackBars")
+
+#convert to Tibble
+as.tibble(SnoProps)
+```
+
+Upper Mainstem Delta
+```{r}
+UMD <- filter(SnoProps, Region == "UMD") #filter out only the UMD data
+
+ggplot(UMD) +
+  aes(x = Origin, y = Proportion, fill = POP) + #hatchery on the left, wild on the right
+  geom_col(width = 0.25) +
+  scale_fill_manual(values = c('#C0C0C0', '#000000', '#808080')) + #Order of colors = DDTs, PBDEs, PCBs
+  guides(fill = FALSE) + #removes legend
+  theme_void() +
+  theme(#removes background color to make it transparent
+    panel.background = element_rect(fill = "transparent", colour = NA),
+    plot.background = element_rect(fill = "transparent", colour = NA),
+    legend.background = element_rect(fill = "transparent", colour = NA),
+    legend.box.background = element_rect(fill = "transparent", colour = NA)
+  )
+
+ggsave("UMD_stackbar.png")
+```
+
+Lower Mainstem Delta
+```{r}
+LMD <- filter(SnoProps, Region == "LMD") #filter out only the LMD data
+
+ggplot(LMD) +
+  aes(x = Origin, y = Proportion, fill = POP) + #hatchery on the left, wild on the right
+  geom_col(width = 0.25) +
+  scale_fill_manual(values = c('#C0C0C0', '#000000', '#808080')) + #Order of colors = DDTs, PBDEs, PCBs
+  guides(fill = FALSE) + #removes legend
+  theme_void() +
+  theme(#removes background color to make it transparent
+    panel.background = element_rect(fill = "transparent", colour = NA),
+    plot.background = element_rect(fill = "transparent", colour = NA),
+    legend.background = element_rect(fill = "transparent", colour = NA),
+    legend.box.background = element_rect(fill = "transparent", colour = NA)
+  )
+
+ggsave("LMD_stackbar.png")
+```
+Distributary Channels
+```{r}
+DD <- filter(SnoProps, Region == "DD") #filter out only the DD data
+
+ggplot(DD) +
+  aes(x = Origin, y = Proportion, fill = POP) + #hatchery on the left, wild on the right
+  geom_col(width = 0.25) +
+  scale_fill_manual(values = c('#C0C0C0', '#000000', '#808080')) + #Order of colors = DDTs, PBDEs, PCBs
+  guides(fill = FALSE) + #removes legend
+  theme_void() +
+  theme(#removes background color to make it transparent
+    panel.background = element_rect(fill = "transparent", colour = NA),
+    plot.background = element_rect(fill = "transparent", colour = NA),
+    legend.background = element_rect(fill = "transparent", colour = NA),
+    legend.box.background = element_rect(fill = "transparent", colour = NA)
+  )
+
+ggsave("DD_stackbar.png")
+```
+
+Legend - fake data
+```{r}
+Leg <- filter(SnoProps, Region == "Legend") #filter out only the DD data
+
+ggplot(Leg) +
+  aes(x = Origin, y = Proportion, fill = POP) + #hatchery on the left, wild on the right
+  geom_col(width = 0.25) +
+  scale_fill_manual(values = c('#C0C0C0', '#000000', '#808080')) + #Order of colors = DDTs, PBDEs, PCBs
+  guides(fill = FALSE) + #removes legend
+  theme_void() +
+  theme(#removes background color to make it transparent
+    panel.background = element_rect(fill = "transparent", colour = NA),
+    plot.background = element_rect(fill = "transparent", colour = NA),
+    legend.background = element_rect(fill = "transparent", colour = NA),
+    legend.box.background = element_rect(fill = "transparent", colour = NA)
+  )
+
+ggsave("Legend_stackbar.png")
+```
+
